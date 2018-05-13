@@ -1,0 +1,37 @@
+package patterra.bp.statemachineconfig;
+
+public enum UserEvents implements InventionEvents {
+    ENTER_INVENTION,
+    SEND_CONFIRMATION,
+    PREPARE_ENTRY,
+
+    // формальная экспертиза
+    FORMAL_SUBMIT,
+    FORMAL_REGISTER_OFFICE_REQUEST,
+    FORMAL_PROLONG_REPLYING,
+    FORMAL_REPLY_TO_OFFICE_REQUEST,
+    FORMAL_WITHDRAW,
+    FORMAL_RESTORE,
+    FORMAL_OK,
+
+    // экспертиза по существу
+    ESSENTIAL_SUBMIT_APPLICATION,
+    ESSENTIAL_REGISTER_OFFICE_REQUEST,
+    ESSENTIAL_PROLONG_REPLYING,
+    ESSENTIAL_REPLY_TO_OFFICE_REQUEST,
+    ESSENTIAL_REGISTER_DENY,
+    ESSENTIAL_REGISTER_GRANTING,
+    ESSENTIAL_SUBMIT_APPEAL,
+    ESSENTIAL_GRANT,
+    ESSENTIAL_WITHDRAW,
+    ESSENTIAL_RESTORE,
+
+    // поддержание патента
+    RECEIVE_PATENT,
+    SEND_CERTIFICATE,
+    PAY_ANNUAL_FEE,
+    PROLONG_PATENT,
+
+    // прекращение делопроизводства
+    STOP
+}
