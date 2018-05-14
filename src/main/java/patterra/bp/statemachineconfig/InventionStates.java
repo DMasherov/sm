@@ -1,7 +1,7 @@
 package patterra.bp.statemachineconfig;
 
 public enum InventionStates {
-    PREPARE,
+    PROCESSING,
         ENTERING_APPLICATION,
         CLIENT_INFORMED,
         READY_TO_SUBMIT,

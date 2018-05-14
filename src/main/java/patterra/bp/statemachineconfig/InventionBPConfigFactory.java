@@ -27,14 +27,14 @@ public class InventionBPConfigFactory
             throws Exception {
         config
             .withStates()
-                .initial(PREPARE)
+                .initial(PROCESSING)
                 .state(FORMAL)
                 .state(ESSENTIAL)
                 .state(PATENT_READY)
                 .end(END)
                     .and()
                 .withStates()
-                    .parent(PREPARE)
+                    .parent(PROCESSING)
                     .initial(ENTERING_APPLICATION)
                     .state(CLIENT_INFORMED)
                     .end(READY_TO_SUBMIT)

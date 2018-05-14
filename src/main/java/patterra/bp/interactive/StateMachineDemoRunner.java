@@ -5,9 +5,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
+import patterra.bp.controller.BPController;
 import patterra.bp.statemachineconfig.InventionEvents;
 import patterra.bp.statemachineconfig.InventionStates;
 
@@ -17,14 +17,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Интерактивное управление машины состояний в терминале.
+ * Интерактивное управление машины состояний из терминала.
  */
 @Component
 @Profile("demo")
 class StateMachineDemoRunner implements ApplicationRunner {
 
     @Autowired
-    StateMachineFactory<InventionStates, InventionEvents> factory;
+    private BPController<InventionStates, InventionEvents> bpController;
 
     private enum CommandType {
         STOP,
@@ -48,12 +48,6 @@ class StateMachineDemoRunner implements ApplicationRunner {
 
     }
 
-    private String prompt(StateMachine<InventionStates, InventionEvents> sm) {
-        System.out.println("Current state (in hierarchy): " + sm.getState().getIds());
-        System.out.print("sm>");
-        return new Scanner(System.in).nextLine();
-    }
-
     private CommandWithArgs parseCommandType(String command) {
         if ("stop".equals(command)) {
             return new CommandWithArgs(CommandType.STOP);
@@ -70,23 +64,24 @@ class StateMachineDemoRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         {
-            StateMachine<InventionStates, InventionEvents> sm = factory.getStateMachine();
+            StateMachine<InventionStates, InventionEvents> sm = bpController.getStateMachine();
 
             sm.start();
-            Set<InventionEvents> events = sm.getTransitions().stream()
-                    .map(t -> t.getTrigger().getEvent())
-                    .collect(Collectors.toSet());
-            System.out.println("All events: " + events);
+            System.out.println("All events: " + bpController.getAllEvents());
 
             while (true) {
-                String command = prompt(sm);
+                System.out.println("Current state (in hierarchy): " + bpController.getCurrentStates());
+                System.out.println("Possible events: " + bpController.getTriggeringEvents());
+                System.out.print("sm>");
+                String command = new Scanner(System.in).nextLine();
+
                 CommandWithArgs commandWithArgs = parseCommandType(command);
                 CommandType commandType = commandWithArgs.commandType;
                 if (commandType.equals(CommandType.STOP)) {
                     return;
                 } else if (commandType.equals(CommandType.REPEAT)) {
                     sm.stop();
-                    sm = factory.getStateMachine();
+                    sm = bpController.getStateMachine();
                     sm.start();
                 } else if (commandType.equals(CommandType.SET_STATE)) {
                     try {
