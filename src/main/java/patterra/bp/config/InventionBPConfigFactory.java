@@ -1,7 +1,5 @@
 package patterra.bp.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigBuilder;
@@ -16,14 +14,6 @@ import static patterra.bp.config.InventionStates.*;
 @EnableStateMachineFactory
 public class InventionBPConfigFactory
         extends StateMachineConfigurerAdapter<InventionStates, InventionEvents> {
-    @Bean
-    public Action<InventionStates, InventionEvents> aAction() {
-        return context -> {
-            System.out.println("hey!");
-            context.getExtendedState().getVariables().put("qweqwe", 1L);
-        };
-    }
-
     @Override
     public void configure(StateMachineStateConfigurer<InventionStates, InventionEvents> config)
             throws Exception {
@@ -73,7 +63,8 @@ public class InventionBPConfigFactory
                 .source(CLIENT_INFORMED)
                 .event(PREPARE_TO_SUBMIT)
                 .target(READY_TO_SUBMIT)
-                .guard(GuardsConfig.checkDocuments(Arrays.asList(2, 3)))
+                .action(InventionActions.aAction())
+                .guard(InventionGuards.checkDocuments(Arrays.asList(2, 3)))
                 .and()
             .withExternal()
                 .source(READY_TO_SUBMIT)

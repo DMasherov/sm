@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GuardsConfig {
+public class InventionGuards {
 
     private static Invention getInvention(StateContext context) {
         Object obj = context.getExtendedState().getVariables().get("invention");

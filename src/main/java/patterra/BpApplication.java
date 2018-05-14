@@ -1,8 +1,7 @@
-package patterra.bp;
+package patterra;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scripting.ScriptEvaluator;
 
 @SpringBootApplication
 public class BpApplication {

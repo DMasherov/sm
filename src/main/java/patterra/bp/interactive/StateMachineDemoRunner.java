@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
-import patterra.bp.controller.StateMachineService;
+import patterra.bp.service.InventionStateMachineService;
+import patterra.bp.service.StateMachineService;
 import patterra.bp.config.InventionEvents;
 import patterra.bp.config.InventionStates;
+import patterra.domain.repos.InventionRepository;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -20,9 +22,8 @@ import java.util.Scanner;
 @Component
 @Profile("demo")
 class StateMachineDemoRunner implements ApplicationRunner {
-
     @Autowired
-    private StateMachineService<InventionStates, InventionEvents> stateMachineService;
+    private InventionStateMachineService stateMachineService;
 
     private enum CommandType {
         STOP,

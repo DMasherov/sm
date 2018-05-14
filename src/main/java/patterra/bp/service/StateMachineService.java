@@ -1,4 +1,4 @@
-package patterra.bp.controller;
+package patterra.bp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
@@ -9,16 +9,13 @@ import patterra.domain.GroupType;
 import patterra.domain.Invention;
 
 import javax.validation.constraints.NotNull;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class StateMachineService<S, E> {
+public abstract class StateMachineService<S, E> {
     @Autowired
     private StateMachineFactory<S, E> factory;
 
@@ -77,7 +74,6 @@ public class StateMachineService<S, E> {
         State<S, E> state = getStateMachine().getState();
         return state != null ? state.getIds() : null;
     }
-
 
     // TODO сделать триггер без посылания события
     /**
