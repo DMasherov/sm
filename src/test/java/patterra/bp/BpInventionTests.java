@@ -12,7 +12,7 @@ import patterra.bp.config.InventionStates;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BpApplicationTests {
+public class BpInventionTests {
 
 	@Autowired
 	StateMachineFactory<InventionStates, InventionEvents> inventionBPFactory;

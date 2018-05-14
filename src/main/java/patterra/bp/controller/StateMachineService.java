@@ -6,6 +6,7 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Component;
 import patterra.domain.GroupType;
+import patterra.domain.Invention;
 
 import javax.validation.constraints.NotNull;
 import java.awt.*;
@@ -29,6 +30,7 @@ public class StateMachineService<S, E> {
     public StateMachine<S, E> getStateMachine() {
         if (sm == null) {
             sm = factory.getStateMachine();
+            sm.getExtendedState().getVariables().put("invention", new Invention());
         }
         return sm;
     }
@@ -76,24 +78,27 @@ public class StateMachineService<S, E> {
         return state != null ? state.getIds() : null;
     }
 
+
+    // TODO сделать триггер без посылания события
     /**
      * Return all acceptable events.
      *
      * Sends events to the state machine and stores every accepted event.
      */
-    public Stream<E> getTriggeringApplicableEvents(@NotNull S stateId) {
-        return getTriggeringEvents(stateId)
-                .filter(e -> getStateMachine().sendEvent(e));
-    }
-
-    public List<E> getTriggeringApplicableEvents() {
-        State<S, E> state = getStateMachine().getState();
-        if (state == null) {
-            return null;
-        }
-        return state.getIds().stream()
-                .flatMap(this::getTriggeringApplicableEvents)
-                .collect(Collectors.toList());
-    }
+//    public Stream<E> getTriggeringApplicableEvents(@NotNull S stateId) {
+//        getStateMachine().stop();
+//        return getTriggeringEvents(stateId)
+//                .filter(e -> getStateMachine().sendEvent(e));
+//    }
+//
+//    public List<E> getTriggeringApplicableEvents() {
+//        State<S, E> state = getStateMachine().getState();
+//        if (state == null) {
+//            return null;
+//        }
+//        return state.getIds().stream()
+//                .flatMap(this::getTriggeringApplicableEvents)
+//                .collect(Collectors.toList());
+//    }
 }
 

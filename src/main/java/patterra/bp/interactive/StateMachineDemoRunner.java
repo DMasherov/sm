@@ -29,6 +29,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
         SET_STATE,
         REPEAT,
         SEND_EVENT,
+        TRIGGER_CURRENT_TO_CHECK,
         HELP,
     }
 
@@ -60,6 +61,9 @@ class StateMachineDemoRunner implements ApplicationRunner {
         if (command.startsWith("set state ")) {
             return new CommandWithArgs(CommandType.SET_STATE, command.replaceAll("^set state ", ""));
         }
+        if (Arrays.asList("check").contains(command)) {
+            return new CommandWithArgs(CommandType.TRIGGER_CURRENT_TO_CHECK);
+        }
         return new CommandWithArgs(CommandType.SEND_EVENT, command);
     }
 
@@ -73,7 +77,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
 
             while (true) {
                 System.out.println("Current state ids: " + stateMachineService.getCurrentStateIds());
-                System.out.println("Possible events: " + stateMachineService.getTriggeringApplicableEvents());
+                System.out.println("Possible events: " + stateMachineService.getTriggeringEvents());
                 System.out.print("sm>");
                 String command = new Scanner(System.in).nextLine();
 
@@ -84,13 +88,19 @@ class StateMachineDemoRunner implements ApplicationRunner {
                 } else if (commandType.equals(CommandType.HELP)) {
                     System.out.println("   type 'EVENT_ID' to send an event.\n"
                             + "   type 'set state STATE_ID' to set a state.\n"
+                            + "   type 'check' to show every applicable event with guards\n"
                             + "   type 'repeat' or 'again' to restart the state machine.\n");
                     continue;
                 } else if (commandType.equals(CommandType.REPEAT)) {
                     sm.stop();
                     sm = stateMachineService.getStateMachine();
                     sm.start();
-                } else if (commandType.equals(CommandType.SET_STATE)) {
+                } else if (commandType.equals(CommandType.TRIGGER_CURRENT_TO_CHECK)) {
+                    // System.out.print("applicable events here: ");
+                    // System.out.println(stateMachineService.getTriggeringApplicableEvents());
+                    System.out.println("TODO...");
+                    continue;
+                } if (commandType.equals(CommandType.SET_STATE)) {
                     try {
                         InventionStates state = InventionStates.valueOf(commandWithArgs.args);
                         sm.stop();

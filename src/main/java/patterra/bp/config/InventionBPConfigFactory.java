@@ -8,6 +8,8 @@ import org.springframework.statemachine.config.builders.StateMachineConfigBuilde
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+import java.util.Arrays;
+
 import static patterra.bp.config.InventionEvents.*;
 import static patterra.bp.config.InventionStates.*;
 
@@ -71,6 +73,7 @@ public class InventionBPConfigFactory
                 .source(CLIENT_INFORMED)
                 .event(PREPARE_TO_SUBMIT)
                 .target(READY_TO_SUBMIT)
+                .guard(GuardsConfig.checkDocuments(Arrays.asList(2, 3)))
                 .and()
             .withExternal()
                 .source(READY_TO_SUBMIT)
