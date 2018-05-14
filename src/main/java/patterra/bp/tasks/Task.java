@@ -1,6 +1,6 @@
 package patterra.bp.tasks;
 
-import patterra.bp.statemachineconfig.InventionEvents;
+import patterra.bp.config.InventionEvents;
 
 import java.util.Date;
 

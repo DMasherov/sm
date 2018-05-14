@@ -1,6 +1,5 @@
 package patterra.bp;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import patterra.bp.statemachineconfig.InventionEvents;
-import patterra.bp.statemachineconfig.InventionStates;
+import patterra.bp.config.InventionEvents;
+import patterra.bp.config.InventionStates;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

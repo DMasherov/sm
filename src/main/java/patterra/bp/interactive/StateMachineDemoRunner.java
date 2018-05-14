@@ -7,14 +7,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
-import patterra.bp.controller.BPController;
-import patterra.bp.statemachineconfig.InventionEvents;
-import patterra.bp.statemachineconfig.InventionStates;
+import patterra.bp.controller.StateMachineService;
+import patterra.bp.config.InventionEvents;
+import patterra.bp.config.InventionStates;
 
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Интерактивное управление машины состояний из терминала.
@@ -24,13 +22,14 @@ import java.util.stream.Collectors;
 class StateMachineDemoRunner implements ApplicationRunner {
 
     @Autowired
-    private BPController<InventionStates, InventionEvents> bpController;
+    private StateMachineService<InventionStates, InventionEvents> stateMachineService;
 
     private enum CommandType {
         STOP,
         SET_STATE,
         REPEAT,
         SEND_EVENT,
+        HELP,
     }
 
     private static class CommandWithArgs {
@@ -52,6 +51,9 @@ class StateMachineDemoRunner implements ApplicationRunner {
         if ("stop".equals(command)) {
             return new CommandWithArgs(CommandType.STOP);
         }
+        if ("help".equals(command)) {
+            return new CommandWithArgs(CommandType.HELP);
+        }
         if (Arrays.asList("repeat", "again").contains(command)) {
             return new CommandWithArgs(CommandType.REPEAT);
         }
@@ -64,14 +66,14 @@ class StateMachineDemoRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         {
-            StateMachine<InventionStates, InventionEvents> sm = bpController.getStateMachine();
+            StateMachine<InventionStates, InventionEvents> sm = stateMachineService.getStateMachine();
 
             sm.start();
-            System.out.println("All events: " + bpController.getAllEvents());
+            System.out.println("All events: " + stateMachineService.getAllEvents());
 
             while (true) {
-                System.out.println("Current state (in hierarchy): " + bpController.getCurrentStates());
-                System.out.println("Possible events: " + bpController.getTriggeringEvents());
+                System.out.println("Current state ids: " + stateMachineService.getCurrentStateIds());
+                System.out.println("Possible events: " + stateMachineService.getTriggeringApplicableEvents());
                 System.out.print("sm>");
                 String command = new Scanner(System.in).nextLine();
 
@@ -79,9 +81,14 @@ class StateMachineDemoRunner implements ApplicationRunner {
                 CommandType commandType = commandWithArgs.commandType;
                 if (commandType.equals(CommandType.STOP)) {
                     return;
+                } else if (commandType.equals(CommandType.HELP)) {
+                    System.out.println("   type 'EVENT_ID' to send an event.\n"
+                            + "   type 'set state STATE_ID' to set a state.\n"
+                            + "   type 'repeat' or 'again' to restart the state machine.\n");
+                    continue;
                 } else if (commandType.equals(CommandType.REPEAT)) {
                     sm.stop();
-                    sm = bpController.getStateMachine();
+                    sm = stateMachineService.getStateMachine();
                     sm.start();
                 } else if (commandType.equals(CommandType.SET_STATE)) {
                     try {

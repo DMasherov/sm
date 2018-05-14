@@ -1,4 +1,4 @@
-package patterra.bp.statemachineconfig;
+package patterra.bp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.statemachine.action.Action;
@@ -8,8 +8,8 @@ import org.springframework.statemachine.config.builders.StateMachineConfigBuilde
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
-import static patterra.bp.statemachineconfig.InventionEvents.*;
-import static patterra.bp.statemachineconfig.InventionStates.*;
+import static patterra.bp.config.InventionEvents.*;
+import static patterra.bp.config.InventionStates.*;
 
 @EnableStateMachineFactory
 public class InventionBPConfigFactory

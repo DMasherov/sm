@@ -1,4 +1,4 @@
-package patterra.bp.statemachineconfig;
+package patterra.bp.config;
 
 public enum InventionStates {
     PROCESSING,

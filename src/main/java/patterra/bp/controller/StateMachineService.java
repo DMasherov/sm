@@ -8,12 +8,16 @@ import org.springframework.stereotype.Component;
 import patterra.domain.GroupType;
 
 import javax.validation.constraints.NotNull;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class BPController<S, E> {
+public class StateMachineService<S, E> {
     @Autowired
     private StateMachineFactory<S, E> factory;
 
@@ -67,9 +71,29 @@ public class BPController<S, E> {
                 .collect(Collectors.toSet());
     }
 
-    public Collection<S> getCurrentStates() {
+    public Collection<S> getCurrentStateIds() {
         State<S, E> state = getStateMachine().getState();
         return state != null ? state.getIds() : null;
+    }
+
+    /**
+     * Return all acceptable events.
+     *
+     * Sends events to the state machine and stores every accepted event.
+     */
+    public Stream<E> getTriggeringApplicableEvents(@NotNull S stateId) {
+        return getTriggeringEvents(stateId)
+                .filter(e -> getStateMachine().sendEvent(e));
+    }
+
+    public List<E> getTriggeringApplicableEvents() {
+        State<S, E> state = getStateMachine().getState();
+        if (state == null) {
+            return null;
+        }
+        return state.getIds().stream()
+                .flatMap(this::getTriggeringApplicableEvents)
+                .collect(Collectors.toList());
     }
 }
 

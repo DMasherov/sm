@@ -1,6 +1,5 @@
-package patterra.bp.statemachineconfig;
+package patterra.bp.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import patterra.domain.GroupType;
@@ -10,10 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static patterra.bp.statemachineconfig.InventionEvents.*;
+import static patterra.bp.config.InventionEvents.*;
 
 @Component
-public class Group2EventsMapping {
+public class GroupPermittedEventMapping {
 
     @Bean
     public Map<GroupType, Set<InventionEvents>> group2Events() {
