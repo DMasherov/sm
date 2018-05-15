@@ -13,7 +13,7 @@ public class Invention {
 
     protected Date filingOfficeDate;
 
-    protected Set<Document> documentList = new HashSet<>();
+    protected Set<Document> documents = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -47,11 +47,11 @@ public class Invention {
         this.filingOfficeDate = filingOfficeDate;
     }
 
-    public Set<Document> getDocumentList() {
-        return documentList;
+    public Set<Document> getDocuments() {
+        return documents;
     }
 
-    public void setDocumentList(Set<Document> documentList) {
-        this.documentList = documentList;
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
     }
 }

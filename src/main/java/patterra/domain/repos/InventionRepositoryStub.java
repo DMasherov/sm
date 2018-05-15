@@ -24,7 +24,7 @@ public class InventionRepositoryStub implements InventionRepository {
         invention.setId(id);
         invention.setApplicationNumber(appNumber);
         invention.setFilingOfficeDate(date);
-        invention.setDocumentList(
+        invention.setDocuments(
                 Arrays.asList(documentIds).stream()
                         .map(docId -> {
                             Document d = new Document();

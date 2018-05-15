@@ -21,7 +21,7 @@ public class InventionGuards {
     public static Guard<InventionStates, InventionEvents> checkDocuments(Collection<Integer> documentIds) {
         return context -> {
             Invention invention = getInvention(context);
-            Set<Integer> inventionDocIds = invention.getDocumentList().stream()
+            Set<Integer> inventionDocIds = invention.getDocuments().stream()
                     .map(d -> d.getId())
                     .collect(Collectors.toSet());
             return inventionDocIds.containsAll(documentIds);

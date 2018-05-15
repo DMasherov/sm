@@ -2,32 +2,50 @@ package patterra.bp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.access.StateMachineAccess;
+import org.springframework.statemachine.access.StateMachineFunction;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.state.State;
-import org.springframework.stereotype.Component;
-import patterra.domain.GroupType;
-import patterra.domain.Invention;
+import org.springframework.statemachine.support.DefaultStateMachineContext;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Component
 public abstract class StateMachineService<S, E> {
     @Autowired
     private StateMachineFactory<S, E> factory;
 
-    @Autowired
-    private Map<GroupType, Set<E>> group2Events;
+    private StateMachine<S, E> sm;
 
-    private StateMachine<S,E> sm;
+    // from https://github.com/spring-tips/statemachine/
+    public void initialize(S stateId) {
+        sm = factory.getStateMachine();
+        sm.stop();
+        if (stateId != null) {
+            sm.getStateMachineAccessor()
+                    .doWithAllRegions(new StateMachineFunction<StateMachineAccess<S, E>>() {
+                        @Override
+                        public void apply(StateMachineAccess<S, E> sma) {
+                            sma.resetStateMachine(new DefaultStateMachineContext<S, E>(stateId, null, null, null));
+                        }
+                    });
+        }
+        sm.getExtendedState().getVariables().putAll(variablesForBP());
+        sm.start();
+    }
+
+    public void initialize() {
+        initialize(null);
+    }
+
+    public abstract Map<Object, Object> variablesForBP();
 
     public StateMachine<S, E> getStateMachine() {
         if (sm == null) {
-            sm = factory.getStateMachine();
-            sm.getExtendedState().getVariables().put("invention", new Invention());
+            initialize();
         }
         return sm;
     }
@@ -38,7 +56,7 @@ public abstract class StateMachineService<S, E> {
                 .map(t -> t.getTrigger().getEvent());
     }
 
-    public List<E> getTriggeringEvents() {
+    public Collection<E> getTriggeringEvents() {
         State<S, E> state = getStateMachine().getState();
         if (state == null) {
             return null;
@@ -48,23 +66,7 @@ public abstract class StateMachineService<S, E> {
                 .collect(Collectors.toList());
     }
 
-    public Stream<E> getEventsAvailableToGroup(@NotNull S stateId, GroupType groupType) {
-        Set<E> groupEvents = group2Events.get(groupType);
-        return getTriggeringEvents(stateId)
-                .filter(groupEvents::contains);
-    }
-
-    public List<E> getEventsAvailableToGroup(GroupType groupType) {
-        State<S, E> state = getStateMachine().getState();
-        if (state == null) {
-            return null;
-        }
-        return state.getIds().stream()
-                .flatMap(id -> this.getEventsAvailableToGroup(id, groupType))
-                .collect(Collectors.toList());
-    }
-
-    public Set<E> getAllEvents() {
+    public Collection<E> getAllEvents() {
         return getStateMachine().getTransitions().stream()
                 .map(t -> t.getTrigger().getEvent())
                 .collect(Collectors.toSet());
@@ -73,6 +75,10 @@ public abstract class StateMachineService<S, E> {
     public Collection<S> getCurrentStateIds() {
         State<S, E> state = getStateMachine().getState();
         return state != null ? state.getIds() : null;
+    }
+
+    public boolean sendEvent(E e) {
+        return getStateMachine().sendEvent(e);
     }
 
     // TODO сделать триггер без посылания события
