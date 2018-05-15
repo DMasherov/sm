@@ -1,4 +1,4 @@
-package patterra.bp.config;
+package patterra.bp.invention.config.sm;
 
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class InventionGuards {
+public class Guards {
 
     private static Invention getInvention(StateContext context) {
         Object obj = context.getExtendedState().getVariables().get("invention");
@@ -18,7 +18,7 @@ public class InventionGuards {
         throw new IllegalStateException("No invention object in the state machine!");
     }
 
-    public static Guard<InventionStates, InventionEvents> checkDocuments(Collection<Integer> documentIds) {
+    public static Guard<States, Events> checkDocuments(Collection<Integer> documentIds) {
         return context -> {
             Invention invention = getInvention(context);
             Set<Integer> inventionDocIds = invention.getDocuments().stream()

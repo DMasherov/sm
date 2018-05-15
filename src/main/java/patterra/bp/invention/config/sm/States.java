@@ -1,6 +1,6 @@
-package patterra.bp.config;
+package patterra.bp.invention.config.sm;
 
-public enum InventionStates {
+public enum States {
     PROCESSING,
         ENTERING_APPLICATION,
         CLIENT_INFORMED,

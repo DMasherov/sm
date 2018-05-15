@@ -1,17 +1,15 @@
-package patterra.bp.service;
+package patterra.bp.invention.config.sm;
 
-import org.springframework.stereotype.Component;
-import patterra.bp.config.InventionEvents;
-import patterra.bp.config.InventionStates;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import patterra.domain.Invention;
 
 import java.util.Collections;
 import java.util.Map;
 
-@Component
-public class InventionStateMachineService
-        extends StateMachineService<InventionStates, InventionEvents> {
-    @Override
+@Configuration
+public class Behavior {
+    @Bean
     public Map<Object, Object> variablesForBP() {
         Invention invention = new Invention();
         invention.setId(1);

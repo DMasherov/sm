@@ -1,6 +1,6 @@
 package patterra.domain.repos;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import patterra.domain.Document;
 import patterra.domain.Invention;
 
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class InventionRepositoryStub implements InventionRepository {
     public List<Invention> findAll() {
         return Arrays.asList(

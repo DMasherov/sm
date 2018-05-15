@@ -1,7 +1,9 @@
-package patterra.bp.config;
+package patterra.bp.invention.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import patterra.bp.invention.config.sm.Events;
 import patterra.domain.GroupType;
 
 import java.util.EnumSet;
@@ -9,15 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static patterra.bp.config.InventionEvents.*;
+import static patterra.bp.invention.config.sm.Events.*;
 
-@Component
-public class GroupPermittedEventMapping {
+@Configuration
+public class GroupEventConfig {
 
     @Bean
-    public Map<GroupType, Set<InventionEvents>> group2Events() {
-        Map<GroupType, Set<InventionEvents>> group2Events = new HashMap<>();
-        group2Events.put(GroupType.ADMIN, EnumSet.allOf(InventionEvents.class));
+    public Map<GroupType, Set<Events>> group2Events() {
+        Map<GroupType, Set<Events>> group2Events = new HashMap<>();
+        group2Events.put(GroupType.ADMIN, EnumSet.allOf(Events.class));
         group2Events.put(GroupType.FORMAL_EXPERTISE, EnumSet.of(
                 FORMAL_SUBMIT,
                 FORMAL_REGISTER_OFFICE_REQUEST,

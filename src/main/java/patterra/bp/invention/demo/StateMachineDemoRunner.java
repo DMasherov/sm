@@ -1,4 +1,4 @@
-package patterra.bp.interactive;
+package patterra.bp.invention.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -6,9 +6,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
-import patterra.bp.config.InventionEvents;
-import patterra.bp.config.InventionStates;
-import patterra.bp.service.InventionStateMachineService;
+import patterra.bp.invention.config.sm.Events;
+import patterra.bp.invention.config.sm.States;
+import patterra.bp.StateMachineFacade;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -20,18 +20,18 @@ import java.util.Scanner;
 @Profile("demo")
 class StateMachineDemoRunner implements ApplicationRunner {
     @Autowired
-    private InventionStateMachineService stateMachineService;
+    private StateMachineFacade<States, Events> smf;
 
     @Override
     public void run(ApplicationArguments args) {
-        StateMachine<InventionStates, InventionEvents> sm = stateMachineService.getStateMachine();
+        StateMachine<States, Events> sm = smf.getStateMachine();
 
         sm.start();
-        System.out.println("All events: " + stateMachineService.getAllEvents());
+        System.out.println("All events: " + smf.getAllEvents());
 
         while (true) {
-            System.out.println("Current state ids: " + stateMachineService.getCurrentStateIds());
-            System.out.println("Possible events: " + stateMachineService.getTriggeringEvents());
+            System.out.println("Current state ids: " + smf.getCurrentStateIds());
+            System.out.println("Possible events: " + smf.getTriggeringEvents());
             System.out.print("sm>");
             String command = new Scanner(System.in).nextLine();
             CommandWithArgs commandWithArgs = parseCommandType(command);
@@ -53,19 +53,19 @@ class StateMachineDemoRunner implements ApplicationRunner {
                 return;
             }
             case REPEAT: {
-                stateMachineService.initialize();
+                smf.initialize();
                 return;
             }
             case TRIGGER_CURRENT_TO_CHECK: {
                 // System.out.print("applicable events here: ");
-                // System.out.println(stateMachineService.getTriggeringApplicableEvents());
+                // System.out.println(smf.getTriggeringApplicableEvents());
                 System.out.println("TODO...");
                 return;
             }
             case SET_STATE: {
                 try {
-                    InventionStates state = InventionStates.valueOf(commandWithArgs.args);
-                    stateMachineService.initialize(state);
+                    States state = States.valueOf(commandWithArgs.args);
+                    smf.initialize(state);
                 } catch (IllegalArgumentException e) {
                     System.out.println("no such state!");
                 }
@@ -73,8 +73,8 @@ class StateMachineDemoRunner implements ApplicationRunner {
             }
             case SEND_EVENT: {
                 try {
-                    InventionEvents event = InventionEvents.valueOf(commandWithArgs.args);
-                    stateMachineService.sendEvent(event);
+                    Events event = Events.valueOf(commandWithArgs.args);
+                    smf.sendEvent(event);
                 } catch (IllegalArgumentException e) {
                     System.out.println("no such event!");
                 }

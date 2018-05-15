@@ -1,10 +1,10 @@
-package patterra.tasks;
+package patterra.bp.tasks;
 
 import patterra.domain.User;
 
 import java.time.LocalDate;
 
-public abstract class Reminder {
+public abstract class Task {
     private User user;
     private LocalDate until;
 

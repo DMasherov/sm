@@ -1,4 +1,4 @@
-package patterra.bp.service;
+package patterra.bp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
@@ -14,9 +14,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class StateMachineService<S, E> {
+public class StateMachineFacade<S, E> {
     @Autowired
     private StateMachineFactory<S, E> factory;
+
+    @Autowired
+    private Map<Object, Object> variablesForBP;
 
     private StateMachine<S, E> sm;
 
@@ -29,19 +32,17 @@ public abstract class StateMachineService<S, E> {
                     .doWithAllRegions(new StateMachineFunction<StateMachineAccess<S, E>>() {
                         @Override
                         public void apply(StateMachineAccess<S, E> sma) {
-                            sma.resetStateMachine(new DefaultStateMachineContext<S, E>(stateId, null, null, null));
+                            sma.resetStateMachine(new DefaultStateMachineContext<>(stateId, null, null, null));
                         }
                     });
         }
-        sm.getExtendedState().getVariables().putAll(variablesForBP());
+        sm.getExtendedState().getVariables().putAll(variablesForBP);
         sm.start();
     }
 
     public void initialize() {
         initialize(null);
     }
-
-    public abstract Map<Object, Object> variablesForBP();
 
     public StateMachine<S, E> getStateMachine() {
         if (sm == null) {

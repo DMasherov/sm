@@ -7,15 +7,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import patterra.bp.config.InventionEvents;
-import patterra.bp.config.InventionStates;
+import patterra.bp.invention.config.sm.Events;
+import patterra.bp.invention.config.sm.States;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BpInventionTests {
 
 	@Autowired
-	StateMachineFactory<InventionStates, InventionEvents> inventionBPFactory;
+	StateMachineFactory<States, Events> inventionBPFactory;
 
 	@Test
 	public void contextLoads() {
@@ -23,7 +23,7 @@ public class BpInventionTests {
 
 	@Test
 	public void test() {
-		StateMachine<InventionStates, InventionEvents> stateMachine = inventionBPFactory.getStateMachine();
+		StateMachine<States, Events> stateMachine = inventionBPFactory.getStateMachine();
 
 		stateMachine.start();
 //

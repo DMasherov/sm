@@ -1,6 +1,6 @@
-package patterra.bp.config;
+package patterra.bp.invention.config.sm;
 
-public enum InventionEvents {
+public enum Events {
     ENTER_INVENTION,
     SEND_CONFIRMATION,
     PREPARE_TO_SUBMIT,

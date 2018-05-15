@@ -1,21 +1,24 @@
-package patterra.bp.config;
+package patterra.bp.invention.config.sm;
 
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigBuilder;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import patterra.bp.invention.config.sm.Actions;
+import patterra.bp.invention.config.sm.Events;
+import patterra.bp.invention.config.sm.Guards;
+import patterra.bp.invention.config.sm.States;
 
 import java.util.Arrays;
 
-import static patterra.bp.config.InventionEvents.*;
-import static patterra.bp.config.InventionStates.*;
+import static patterra.bp.invention.config.sm.Events.*;
+import static patterra.bp.invention.config.sm.States.*;
 
 @EnableStateMachineFactory
-public class InventionBPConfigFactory
-        extends StateMachineConfigurerAdapter<InventionStates, InventionEvents> {
+public class SMConfigFactory extends StateMachineConfigurerAdapter<States, Events> {
     @Override
-    public void configure(StateMachineStateConfigurer<InventionStates, InventionEvents> config)
+    public void configure(StateMachineStateConfigurer<States, Events> config)
             throws Exception {
         config
             .withStates()
@@ -50,7 +53,7 @@ public class InventionBPConfigFactory
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<InventionStates, InventionEvents> config)
+    public void configure(StateMachineTransitionConfigurer<States, Events> config)
             throws Exception {
         config
             // entering
@@ -63,8 +66,8 @@ public class InventionBPConfigFactory
                 .source(CLIENT_INFORMED)
                 .event(PREPARE_TO_SUBMIT)
                 .target(READY_TO_SUBMIT)
-                .action(InventionActions.aAction())
-                .guard(InventionGuards.checkDocuments(Arrays.asList(2, 3)))
+                .action(Actions.aAction())
+                .guard(Guards.checkDocuments(Arrays.asList(2, 3)))
                 .and()
             .withExternal()
                 .source(READY_TO_SUBMIT)
@@ -175,7 +178,7 @@ public class InventionBPConfigFactory
     }
 
     @Override
-    public void configure(StateMachineConfigBuilder<InventionStates, InventionEvents> config)
+    public void configure(StateMachineConfigBuilder<States, Events> config)
             throws Exception {
 
 //        config.getOrBuild()
