@@ -8,9 +8,10 @@ public class User {
     private Integer id;
     private String userName;
     private String fullName;
-    private Set<String> roles = new HashSet<>();
+    private Set<RoleType> roles = new HashSet<>();
     private Date loggedIn;
     private Date loggedOut;
+    private RoleType roleType;
 
     public User() {
     }
@@ -63,11 +64,11 @@ public class User {
         this.loggedOut = loggedOut;
     }
 
-    public Set<String> getRoles() {
+    public Set<RoleType> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Set<RoleType> roles) {
         this.roles = roles;
     }
 

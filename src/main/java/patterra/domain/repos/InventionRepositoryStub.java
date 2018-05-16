@@ -19,6 +19,16 @@ public class InventionRepositoryStub implements InventionRepository {
         );
     }
 
+    @Override
+    public Invention findOne() {
+        return findAll().get(0);
+    }
+
+    @Override
+    public boolean update(Invention invention) {
+        return true;
+    }
+
     private Invention makeInvention(Integer id, String appNumber, Date date, Integer... documentIds) {
         Invention invention = new Invention();
         invention.setId(id);

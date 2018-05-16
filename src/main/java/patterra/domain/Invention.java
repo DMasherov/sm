@@ -15,6 +15,8 @@ public class Invention {
 
     protected Set<Document> documents = new HashSet<>();
 
+    private String stateId;
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class Invention {
 
     public void setDocuments(Set<Document> documents) {
         this.documents = documents;
+    }
+
+    public String getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
     }
 }
