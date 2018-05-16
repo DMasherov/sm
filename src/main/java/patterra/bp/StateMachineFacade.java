@@ -7,6 +7,7 @@ import org.springframework.statemachine.access.StateMachineFunction;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -14,30 +15,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 public class StateMachineFacade<S, E> {
     @Autowired
     private StateMachineFactory<S, E> factory;
 
-    @Autowired
-    private Map<Object, Object> variablesForBP;
-
     private StateMachine<S, E> sm;
 
     // from https://github.com/spring-tips/statemachine/
-    public void initialize(S stateId) {
+    public void initialize(S stateId, StateMachineFunction<StateMachineAccess<S, E>> strategy) {
         sm = factory.getStateMachine();
         sm.stop();
         if (stateId != null) {
-            sm.getStateMachineAccessor()
-                    .doWithAllRegions(new StateMachineFunction<StateMachineAccess<S, E>>() {
-                        @Override
-                        public void apply(StateMachineAccess<S, E> sma) {
-                            sma.resetStateMachine(new DefaultStateMachineContext<>(stateId, null, null, null));
-                        }
-                    });
+            sm.getStateMachineAccessor().doWithAllRegions(strategy);
         }
-        sm.getExtendedState().getVariables().putAll(variablesForBP);
         sm.start();
+    }
+
+    public void initialize(S stateId) {
+        initialize(stateId, new StateMachineFunction<StateMachineAccess<S, E>>() {
+            @Override
+            public void apply(StateMachineAccess<S, E> sma) {
+                sma.resetStateMachine(new DefaultStateMachineContext<>(stateId, null, null, null));
+            }
+        });
     }
 
     public void initialize() {
@@ -49,6 +50,10 @@ public class StateMachineFacade<S, E> {
             initialize();
         }
         return sm;
+    }
+
+    public void setVariables(Map<Object, Object> variables) {
+        sm.getExtendedState().getVariables().putAll(variables);
     }
 
     public Stream<E> getTriggeringEvents(@NotNull S stateId) {

@@ -4,14 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
+import patterra.bp.StateMachineFacade;
 import patterra.bp.invention.config.sm.Events;
 import patterra.bp.invention.config.sm.States;
-import patterra.bp.StateMachineFacade;
+import patterra.domain.Document;
+import patterra.domain.Invention;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Интерактивное управление машины состояний из терминала.
@@ -24,9 +28,8 @@ class StateMachineDemoRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        StateMachine<States, Events> sm = smf.getStateMachine();
-
-        sm.start();
+        smf.initialize();
+        smf.setVariables(getInitialVariables());
         System.out.println("All events: " + smf.getAllEvents());
 
         while (true) {
@@ -42,6 +45,20 @@ class StateMachineDemoRunner implements ApplicationRunner {
         }
     }
 
+    private Map<Object, Object> getInitialVariables() {
+        Invention invention = new Invention();
+        invention.setId(1);
+        // В одном из Guards проверяется наличие документов с id 2, 3
+        invention.setDocuments(Arrays.asList(2, 3).stream()
+                .map(id -> {
+                    Document d = new Document();
+                    d.setId(id);
+                    return d;
+                })
+                .collect(Collectors.toSet()));
+        return Collections.singletonMap("invention", invention);
+    }
+
     private void processCommand(CommandWithArgs commandWithArgs) {
         CommandType commandType = commandWithArgs.commandType;
         switch (commandType) {
@@ -54,6 +71,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
             }
             case REPEAT: {
                 smf.initialize();
+                smf.setVariables(getInitialVariables());
                 return;
             }
             case TRIGGER_CURRENT_TO_CHECK: {
@@ -66,6 +84,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
                 try {
                     States state = States.valueOf(commandWithArgs.args);
                     smf.initialize(state);
+                    smf.setVariables(getInitialVariables());
                 } catch (IllegalArgumentException e) {
                     System.out.println("no such state!");
                 }
@@ -102,6 +121,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
         return new CommandWithArgs(CommandType.SEND_EVENT, command);
     }
 
+
     private enum CommandType {
         STOP,
         SET_STATE,
@@ -112,6 +132,7 @@ class StateMachineDemoRunner implements ApplicationRunner {
     }
 
     private static class CommandWithArgs {
+
         CommandType commandType;
         String args;
 
