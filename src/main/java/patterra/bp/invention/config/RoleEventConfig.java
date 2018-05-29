@@ -20,25 +20,25 @@ public class RoleEventConfig {
         Map<RoleType, Set<Events>> role2Events = new HashMap<>();
         role2Events.put(RoleType.ADMIN, EnumSet.allOf(Events.class));
         role2Events.put(RoleType.FORMAL_EXPERTISE, EnumSet.of(
-                FORMAL_SUBMIT,
-                FORMAL_REGISTER_OFFICE_REQUEST,
-                FORMAL_PROLONG_REPLYING,
-                FORMAL_REPLY_TO_OFFICE_REQUEST,
-                FORMAL_WITHDRAW,
-                FORMAL_RESTORE,
+                SUBMIT_APPLICATION,
+                REGISTER_OFFICE_REQUEST,
+                EXTEND_REQUEST,
+                REPLY_TO_OFFICE_REQUEST,
+                WITHDRAW,
+                RESTORE,
                 FORMAL_COMPLETE
         ));
         role2Events.put(RoleType.ESSENTIAL_EXPERTISE, EnumSet.of(
-                ESSENTIAL_SUBMIT_APPLICATION,
-                ESSENTIAL_REGISTER_OFFICE_REQUEST,
-                ESSENTIAL_PROLONG_REPLYING,
-                ESSENTIAL_REPLY_TO_OFFICE_REQUEST,
-                ESSENTIAL_REGISTER_GRANTING,
-                ESSENTIAL_REGISTER_DENY,
-                ESSENTIAL_SUBMIT_APPEAL,
-                ESSENTIAL_PATENT_RECEIVE,
-                ESSENTIAL_WITHDRAW,
-                ESSENTIAL_RESTORE
+                SUBMIT_APPLICATION,
+                REGISTER_OFFICE_REQUEST,
+                EXTEND_REQUEST,
+                REPLY_TO_OFFICE_REQUEST,
+                REGISTER_GRANTING,
+                REGISTER_DENY,
+                SUBMIT_APPEAL,
+                PATENT_RECEIVE,
+                WITHDRAW,
+                RESTORE
         ));
         role2Events.put(RoleType.GRANTED_PATENT_CONTROL, EnumSet.of(
                 RECEIVE_PATENT,
